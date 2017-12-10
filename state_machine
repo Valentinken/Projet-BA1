@@ -157,13 +157,7 @@ def loop():
             # You received the PATH dictionary emitted by the path detector
             # you can access this dictionary in event.val
             # actuate car coresspondingly, change state if relevant
-            #for l in range (len(c)) :
-            #    if c[l] != 0 :
-            #        emergency_stop()
-            #a = event.val
-            #path_dict = a[0]
             handle_path_event(event)
-            #angle_routevoiture = path_dict['heading']
             pass
         elif event.type == Event.SIGN:
             # You received the SIGN dictionary emitted by the sign detector
