@@ -97,19 +97,7 @@ def detect(mask):
     # trouve la distance que la voiture peut parcourir sur la route (utilise le slicing ainsi que numpy)
     image = mask # copie de l'image
     chemin = image[:,x0] #sclice l'image en prenant comme colonne l'emplacement de la voiture calculer lus haut
-    #m,n = np.where(chemin>0.5) #cette fonction va exécuter un test booléeen (ici >0.5) sur tout les élément du vecteur) et renvoie les coordoné ou sa cloche
-    #
-    #a = []
-    #for i in range(20,len(chemin)) :
-    #   a.append(chemin[i])
-    #logging.info(chemin)
-    #chemin = a
-    #logging.info(chemin)
-    #a = []
-    #for i in range(8,len(chemin),-1) :
-    #   a.append(chemin[i])
-    #chemin = a
-    chemin = chemin [20:] 
+    #chemin = chemin [20:] test pour résoudre le bug
     for i,j in enumerate(chemin):
        if j > 100:
             dist = i
