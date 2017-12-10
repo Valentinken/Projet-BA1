@@ -64,7 +64,7 @@ def loop():
             event
             pass
         if event.type == Event.CMD and event.val == "1.1":
-            logging.info("maneuvre 1.1")
+            logging.info("manoeuvre 1.1")
             pathdetector = False
             state = MOVING
             Car.send(0, 0, 5, 0)
@@ -75,7 +75,7 @@ def loop():
             state = STOPPED
             pass
         if event.type == Event.CMD and event.val == "1.2":
-            logging.info("maneuvre 1.2")
+            logging.info("manoeuvre 1.2")
             pathdetector = False
             state = MOVING		
             Car.send(0, 0, 3, 0)
@@ -86,7 +86,7 @@ def loop():
             state = STOPPED
             pass
         if event.type == Event.CMD and event.val == "1.3":
-            logging.info("maneuvre 1.3")
+            logging.info("manoeuvre 1.3")
             pathdetector = False
             Car.send(0, 0, 3, 0)
             event
@@ -107,7 +107,7 @@ def loop():
             state = STOPPED
             pass
         if event.type == Event.CMD and event.val == "2.2":
-            logging.info("maneuvre 2.2")
+            logging.info("manoeuvre 2.2")
             pathdetector = False
             state = MOVING
             state = MOVING
@@ -119,7 +119,7 @@ def loop():
             state = STOPPED
             pass
         if event.type == Event.CMD and event.val == "2.3":
-            logging.info("maneuvre 2.3")
+            logging.info("manoeuvre 2.3")
             pathdetector = False
             state = MOVING
             Car.send(0, 0, 3, 0)
