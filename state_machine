@@ -99,7 +99,7 @@ def loop():
             state = STOPPED
             event
             Car.send(0, 0, 3, 0)
-            Event.poll()
+            event
             time.sleep(2)
             state = MOVING
             event
@@ -109,7 +109,6 @@ def loop():
         if event.type == Event.CMD and event.val == "2.2":
             logging.info("manoeuvre 2.2")
             pathdetector = False
-            state = MOVING
             state = MOVING
             Car.send(0, 0, 3, 1.7)
             time.sleep(8)
