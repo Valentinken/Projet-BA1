@@ -213,3 +213,35 @@ def handle_path_event(event,manoeuvre31b):
     else:
         # we are in a state that we shouldn't be actuating
         return
+def handle_path_event(event,manoeuvre31b):
+    global state
+    path_dict = event.val
+    if state == MOVING:
+        heading = path_dict['heading']      
+        distance = path_dict['distance']
+        angle = path_dict['angle31']
+        if actuateheading :
+            actuate_heading(event,heading)
+        if distance < 10: 
+            state = STOPPED
+            Car.send(0, 0 ,0 ,0)
+            event
+        if manoeuvre31b :
+            logging.info(angle)
+            Car.send(0, 0, 1, angle)
+            event
+            Car.send(0, 0, 0, 0)
+            event
+            time.sleep(200)
+    else:
+        # we are in a state that we shouldn't be actuating
+        return
+def actuate_heading(event, heading):
+    if heading < -3 :  # ignore absurd angles
+        heading = -1
+        Car.send(0, 0, 1, heading)
+        #event Car.send(0, 0, 3, 0)
+    elif heading > 3 :  # ignore absurd angles
+        heading = 1
+        Car.send(0, 0, 1, heading)
+        #event        Car.send(0, 0, 3, 0) 
