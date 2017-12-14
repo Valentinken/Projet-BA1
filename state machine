@@ -36,9 +36,7 @@ logging.info('Template StateMachine has been initialized')
 # The next variable is a global variable used to store the state between
 # successive calls to loop()
 state = IDLE
-pathdetector= True # variable définisant si le path detector est actif ou non (selon les maneuvre)
-manoeuvre31b = False
-manoeuvre = False
+manoeuvre = {'pathdetector' : True, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False} # crée un  dictionnaire globale permettant d'activé (ou non les manouvres)
 def loop():
     '''State machine control loop.
     Like an arduino program, this function is called repeatedly: whenever
@@ -53,8 +51,7 @@ def loop():
       to.
     '''
     global state  # define state to be a global variable
-    global pathdetector
-    global manoeuvre31b 
+    global manoeuvre
     event = Event.poll()
     if event is not None:
         if event.type == Event.CMD and event.val == "GO":
@@ -67,7 +64,7 @@ def loop():
             pass
         if event.type == Event.CMD and event.val == "1.1":
             logging.info("maneuvre 1.1")
-            pathdetector = False
+            manoeuvre['pathdetector'] = False
             state = MOVING
             Car.send(0, 0, 5, 0)
             event
@@ -78,7 +75,7 @@ def loop():
             pass
         if event.type == Event.CMD and event.val == "1.2":
             logging.info("maneuvre 1.2")
-            pathdetector = False
+            manoeuvre['pathdetector'] = False
             state = MOVING		
             Car.send(0, 0, 3, 0)
             event
@@ -89,7 +86,7 @@ def loop():
             pass
         if event.type == Event.CMD and event.val == "1.3":
             logging.info("maneuvre 1.3")
-            pathdetector = False
+            manoeuvre['pathdetector'] = False
             Car.send(0, 0, 3, 0)
             event
             time.sleep(3)
@@ -110,8 +107,7 @@ def loop():
             pass
         if event.type == Event.CMD and event.val == "2.2":
             logging.info("maneuvre 2.2")
-            pathdetector = False
-            state = MOVING
+            manoeuvre['pathdetector'] = False
             state = MOVING
             Car.send(0, 0, 3, 1.7)
             time.sleep(8)
@@ -122,7 +118,7 @@ def loop():
             pass
         if event.type == Event.CMD and event.val == "2.3":
             logging.info("maneuvre 2.3")
-            pathdetector = False
+            manoeuvre['pathdetector'] = False
             state = MOVING
             Car.send(0, 0, 3, 0)
             time.sleep(1.1)
@@ -147,10 +143,46 @@ def loop():
             Car.send(0, 0, 0, 0)
             state = STOPPED
             pass
-        if event.type == Event.CMD and event.val == "3.1b":
-            logging.info("maneuvre 3.1b")
+        if event.type == Event.CMD and event.val == "3b.1":
+            logging.info("maneuvre 3b.1")
             state = MOVING
-            manoeuvre31b = True
+            manoeuvre['manoeuvre3b.1'] = True
+            Car.send(0, 0, 2, 0)
+            event
+            pass
+        if event.type == Event.CMD and event.val == "3b.2":
+            logging.info("maneuvre 3b.2")
+            state = MOVING
+            manoeuvre['manoeuvre3b.2'] = True
+            manoeuvre['pathdetector'] = False
+            pass
+        if event.type == Event.CMD and event.val == "3b.3":
+            logging.info("maneuvre 3b.3")
+            state = MOVING
+            manoeuvre['manoeuvre3b.3'] = True
+            Car.send(0, 0, 2, 0)
+            event
+            pass
+        if event.type == Event.CMD and event.val == "3b.4":
+            logging.info("maneuvre 3b.4")
+            state = MOVING
+            manoeuvre['manoeuvre3b.4'] = True
+            Car.send(0, 0, 2, 0)
+            event
+            pass
+        if event.type == Event.CMD and event.val == "3b.5":
+            logging.info("maneuvre 3b.7")
+            state = MOVING
+            manoeuvre['manoeuvre3b.5'] = True
+            Car.send(0, 0, 2, 0)
+            event
+            pass
+        if event.type == Event.CMD and event.val == "3b.7":
+            logging.info("maneuvre 3b.7")
+            state = MOVING
+            manoeuvre['manoeuvre3b.7'] = True
+            Car.send(0, 0, 2, 0)
+            event
             pass
         elif event.type == Event.CMD and event.val == "STOP":
             logging.info("remotely ordered to stop")
@@ -160,11 +192,17 @@ def loop():
             # of type Event.CMD!
             emergency_stop()
             pass
-        elif event.type == Event.PATH and pathdetector :
+        elif event.type == Event.PATH and manoeuvre['manoeuvre3b.2'] :
             # You received the PATH dictionary emitted by the path detector
             # you can access this dictionary in event.val
             # actuate car coresspondingly, change state if relevant
-            handle_path_event(event,manoeuvre31b)
+            handle_manoeuvre3b2(event)
+            pass
+        elif event.type == Event.PATH and manoeuvre['pathdetector'] :
+            # You received the PATH dictionary emitted by the path detector
+            # you can access this dictionary in event.val
+            # actuate car coresspondingly, change state if relevant
+            handle_path_event(event)
             pass
         elif event.type == Event.SIGN:
             # You received the SIGN dictionary emitted by the sign detector
@@ -191,63 +229,72 @@ def emergency_stop():
     state = STOPPED
     pass
 
-def handle_path_event(event,manoeuvre31b):
+def handle_path_event(event):
     global state
     global manoeuvre
     path_dict = event.val
-    if state == MOVING:
-        heading = path_dict['heading']      
+    if state == MOVING :
+        heading = path_dict['heading']
+        devant = path_dict['devant']           
         distance = path_dict['distance']
-        devant = path_dict['devant']
         gauche = path_dict['gauche']
         droite = path_dict['droite']
-        actuate_heading(event,heading)
-        '''
-        if not manoeuvre :
-            manoeuvre = True
-            if not devant and gauche :
-                logging.info('==================================================================')
-                time.sleep(2.5)
-                event
-                Car.send(0, 0, 0, 90)
-                event
-                Car.send(0, 0, 2, 0)
-                time.sleep(1.2)
-                event
-                logging.info('gauche')
-            manoeuvre = False
-
-        elif not devant and not gauche and droite:
-            time.sleep(2.5)
-            event
-            Car.send(0, 0, 0, -90)
-            event
-            Car.send(0, 0, 2, 0)
-            time.sleep(1.2)
-            logging.info('droit')
-
-        if manoeuvre31b :
-            logging.info(angle)
-            Car.send(0, 0, 0, angle)
-            event
-            Car.send(0, 0, 0, 0)
-            event
-            time.sleep(200)
-        pass
-    else:
-        # we are in a state that we shouldn't be actuating
+        if manoeuvre['manoeuvre3b.1'] :
+            None # la fonction heading fait tout le boulot
+        elif manoeuvre['manoeuvre3b.3'] :
+            if devant and gauche and droite : # detecte un carfour
+                logging.info('condition réspécté')
+        elif manoeuvre['manoeuvre3b.4'] :
+            if devant and gauche and not droite or devant and not gauche and droite : # detecte un croisement en T
+                logging.info('condition réspécté')
+        elif manoeuvre['manoeuvre3b.5'] :
+            if not devant and gauche and droite : # detecte un branchement en T
+                logging.info('condition réspécté')
+                heading+= 10000 # demmande à la voiture de tourné fortement à gauche
+        elif manoeuvre['manoeuvre3b.7'] :
+            if gauche : # tourne a gauche dés qu'il le peut
+                logging.info('condition réspécté')
+                heading+= 10000 # demmande à la voiture de tourné fortement à gauche
+        elif droite == 1000000 : #n'arrive jammais (juste pour conservé le code)
+            heading-= 10000 # demmande à la voiture de tourné fortement à droite
+        else : # fonction pour faire mes test
+            if gauche and not devant :
+                heading+= 10000 # demmande à la voiture de tourné fortement à gauche
+        actuate_heading(event,heading) # enclanche la fonction corrigent la trajectoire de la voiture
+    else : # on n'est pas en mouvement
         return
-        '''
+     
 def actuate_heading(event,heading): # Fonction encore en phase de test
-    if heading < -0.5 :
+    if heading > 9000 : # fait tourné la voiture fortement à gauche
+        state = MOVING
+        heading = 4
+        Car.send(0, 0,2, heading)   
+        event
+    elif heading < -9000 : # fait tourné la voiture fortement à droite
+        state = MOVING
+        heading = -4
+        Car.send(0, 0,2, heading)   
+        event     
+    elif heading < -0.5 : # fait tourné la voiture à droite
         state = MOVING
         heading = -0.5
         Car.send(0, 0,2, heading)   
         event
-    elif heading > 0.5 :
+    elif heading > 0.5 : # fait tourné la voiture à gauche
         state = MOVING
         heading = 0.5
         Car.send(0, 0, 2, heading)
         event
-    pass
+    pass   
 
+def handle_manoeuvre3b2(event) :  
+    path_dict = event.val
+    global state  
+    heading = path_dict['angle31']
+    logging.info(angle)
+    Car.send(0, 0, 0, angle)
+    event
+    Car.send(0, 0, 0, 0)
+    event 
+    time.sleep(200)
+    pass
