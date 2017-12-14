@@ -267,12 +267,12 @@ def handle_path_event(event):
 def actuate_heading(event,heading): # Fonction encore en phase de test
     if heading > 9000 : # fait tourné la voiture fortement à gauche
         state = MOVING
-        heading = 4
+        heading = 2.5
         Car.send(0, 0,2, heading)   
         event
     elif heading < -9000 : # fait tourné la voiture fortement à droite
         state = MOVING
-        heading = -4
+        heading = -2.5
         Car.send(0, 0,2, heading)   
         event     
     elif heading < -0.5 : # fait tourné la voiture à droite
