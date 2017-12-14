@@ -108,32 +108,33 @@ def detect(mask):
     #for i in range(8,len(chemin),-1) :
     #   a.append(chemin[i])
     #chemin = a
-    pvoiture = (100,230)
-    pdevant = (100,0)
-    pdroite = (200,0)
-    pdroitedemi = (150,0)
-    pgauchedemi = (50,0)
+    pvoiture = (img_width/2,img_height-18) # défini le point ou se trouve la voiture et cinq autre points
+    pdevant = (img_width/2,0)
+    pdroite = (img_width,0)
+    pdroitedemi = (img_width*3/4,0)
+    pgauchedemi = (img_width/4,0)
     pgauche = (0,0)
-    cv2.line(path_img, (100,250), (100,0), (255, 0, 0))
-    p_n,p_m,devant = profile(image,pvoiture,pdevant,250)
-    p_n,p_m,droite = profile(image,pvoiture,pdroite,265)
-    p_n,p_m,gauche = profile(image,pvoiture,pgauche,265)
-    p_n,p_m,droitedemi = profile(image,pvoiture,pdroitedemi,254)
-    p_n,p_m,gauchedemi = profile(image,pvoiture,pgauchedemi,254)
-    devants = [devant,0.0]
-    droites = [droite,14]
-    gauches = [gauche,14]
-    droitedemis = [droitedemi,21.8]
-    gauchedemis = [gauchedemi,21.8]
+    cv2.line(path_img, (100,img_height), (100,img_height), (255, 0, 0))
+    p_n,p_m,devant = profile(image,pvoiture,pdevant,img_height-18img_height-18img_height-18img_height-18img_height-18) # fait cinq slicing
+    p_n,p_m,droite = profile(image,pvoiture,pdroite,img_height-18img_height-18img_height-18img_height-18)
+    p_n,p_m,gauche = profile(image,pvoiture,pgauche,img_height-18img_height-18img_height-18)
+    p_n,p_m,droitedemi = profile(image,pvoiture,pdroitedemi,img_height-18img_height-18)
+    p_n,p_m,gauchedemi = profile(image,pvoiture,pgauchedemi,img_height-18)
+    devants = [devant,0.0] # crée un tuple avec le sclicing et l'angle de celui-ci par rapport a la voiture
+    import math
+    droites = [droite,arctan((img_width/2)/img_height-18)]
+    gauches = [gauche,arctan((img_width/2)/img_height-18)]
+    droitedemis = [droitedemi,arctan((img_width/2)/img_height-18)arctan((img_width/2)/img_height-18)]
+    gauchedemis = [gauchedemi,arctan((img_width/4)/img_height-18)]
     angle31 = [devants,droites,gauches,droitedemis,gauchedemis]
-    for i in range(len(angle31)) :
+    for i in range(len(angle31)) : # fait la moyenne des valeur des pixels des sclicing
         somme = 0
         for j in angle31[i][0]:
             somme += int(j)   
         somme /= len(angle31[i][0])*255
         angle31[i][0] = somme
-    angle31ss = min(angle31)
-    angle31s = int(angle31ss[1])
+    angle31 = min(angle31) # prend le plus petit
+    angle31 = int(angle31[1]) # renvoi l'angle
     devant = [int(np.nonzero(devant)[0][0]),0.0]
     path_dict = {'heading': heading,'distance' : devant[0],'angle31' : angle31s}
     return (path_dict, path_img)
