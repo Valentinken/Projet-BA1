@@ -4,3 +4,4 @@ Quelques liens utiles.<br />
 https://help.github.com/articles/fork-a-repo/ <br />
 https://guides.github.com/activities/forking/ <br />
 https://gist.github.com/Chaser324/ce0505fbed06b947d962 <br />
+https://github.com/odebeir/numpy_tutorialBA1
