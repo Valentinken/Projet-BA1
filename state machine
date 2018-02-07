@@ -61,7 +61,7 @@ def loop():
             state = MOVING
             Car.send(0, 0 ,2 , 0)
             event
-            pass
+            passuche
         if event.type == Event.CMD and event.val == "1.1":
             logging.info("maneuvre 1.1")
             manoeuvre['pathdetector'] = False
@@ -257,8 +257,8 @@ def handle_path_event(event):
                 heading+= 10000 # demmande à la voiture de tourné fortement à gauche
         elif droite == 1000000 : #n'arrive jammais (juste pour conservé le code)
             heading-= 10000 # demmande à la voiture de tourné fortement à droite
-        else : # fonction pour faire mes test
-            if gauche and not devant :
+        else : # fonction pour faire mes test (GO)
+            if gauche :
                 heading+= 10000 # demmande à la voiture de tourné fortement à gauche
         actuate_heading(event,heading) # enclanche la fonction corrigent la trajectoire de la voiture
     else : # on n'est pas en mouvement
