@@ -1,0 +1,48 @@
+\documentclass[a4paper,10pt]{report}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel} 
+\usepackage{lmodern} % Pour changer le pack de police
+\usepackage{makeidx}
+%\title{Rapport de fin d'année du projet Pari Bacar}
+%\author{\textsc{Bertoux} Antoine \and \textsc{Kengawe} Valentin \and \textsc{Maillard} Corentin \and \textsc{Rubio López de la Nieta} Mario \and \textsc{Niyomukiza} Micky \and \textsc{Kalli} Ali}
+%\date{\day} % Pour mettre la date du jour, tapez \today 
+
+\title{Rapport de fin d'année du projet Pari Bacar}
+\date{\day}
+\author{\textsc{Bertoux} Antoine \and \textsc{Kengawe} Valentin \and \textsc{Maillard} Corentin \and \textsc{Rubio López de la Nieta} Mario \and \textsc{Niyomukiza} Micky \and \textsc{Kalli} Ali} 
+\makeindex
+\begin{document}
+\maketitle
+\begin{abstract}
+Le but de notre projet est de nous voir réaliser un prototype de voiture autonome. Ce projet s’inscrit dans l’actualité du métier d’ingénieur qui consiste à relever de nouveaux défis comme la réalisation de nouveaux moyens de transport. La voiture autonome se retrouve en plein boom et bénéficie de l’apport de nouvelles technologies. Les différents constructeurs visent l’amélioration du confort et de la sécurité des usagers leur permettant de voyager en toute sécurité à bord de leur véhicule. Les voitures pourront communiquer ensemble, évitant l’erreur humaine, réduisant le nombre d’accidents et les embouteillages. D’un point de vue écologique ces nouvelles voitures autonomes, souvent électrique, faciliteront un partage entre utilisateurs. La voiture ne sera plus immobilisée une grande partie de la journée mais pourra transporter d’autres personnes. Ceci permettra de mieux rentabiliser les véhicules et permettra aussi un accès à la voiture aux personnes n’en ayant pas les moyens d’en faire l’acquisition seul. 
+Le projet « LE PARI BACAR » a pour ambition de développer un véhicule autonome capable de réaliser un ensemble de manœuvres assurant la sécurité des passagers. 
+Le lancement du produit est prévu pour Pâques 2018. 
+\end{abstract}
+\part{Hardware}
+\chapter{composant}
+un tableau
+\chapter{montage}
+a
+\part{Software}
+\chapter{Orange-pi}
+\section{State machine}
+a
+\section{Path detector}
+\subsection{Path detector principale}
+a
+\subsection{Path detector de la manoeucvre 3b.2}
+a
+\section{Sign detector}
+a
+\chapter{Arduino}
+a
+\tableofcontents
+
+
+Bla\index{bla} bla bla
+
+\listoffigures
+\listoftables
+\printindex
+\end{document}
