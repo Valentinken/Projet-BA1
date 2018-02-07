@@ -124,9 +124,6 @@ def detect(mask):
         droite = True 
     else : # sinon il n'y en a pas
         droite = False 
-    logging.info(devant)
-    logging.info(gauche)
-    logging.info(droite)
     path_dict = {'heading': heading,'distance' : devant,'devant' : devant, 'gauche' : gauche, 'droite' :droite} # dictionaire que l'on va renvoyer
     return (path_dict, path_img)
 
