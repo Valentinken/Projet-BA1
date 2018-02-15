@@ -121,12 +121,13 @@ def detect(mask):
     path_dict = {'heading': heading,'angle' : angle}
     return (path_dict, path_img)
 
-def distance(droite) : # fonction trouvant la distance que la voiture peut parcourire sur la route (fonction fournie)
+def distance(chemin) :
+    """Fonction trouvant la distance que la voiture peut parcourire sur la route (fonction fournie) """
     for dist,j in enumerate(droite):
         if j :
             break
     return dist
-
+    
 def find_center(mask, x, y):
     """Sample the horizontal line passing through coordinate (x,y) for non-zero
        pixels in mask to determine road center"""
