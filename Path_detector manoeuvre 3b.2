@@ -1,4 +1,3 @@
-
 """This is a simplistic Path Detector.
 
     A Path Detector module is a python file that contains a `detect` function
@@ -95,39 +94,37 @@ def detect(mask):
     # Return the path dictionary and image. The path_dict will be sent
     # to the state machine. The path_img is displayed in the viewer
     # trouve la distance que la voiture peut parcourir sur la route (utilise le slicing ainsi que numpy)
-    image = mask # copie de l'image
-    pvoiture = (img_width/2,img_height-18) # défini le point ou se trouve la voiture et cinq autre points
-    pdevant = (img_width/2,0)
+    pvoiture = (int(img_width/2),img_height-29) # défini le point ou se trouve la voiture et cinq autre points
+    pdevant = (int(img_width/2),0)
     pdroite = (img_width,0)
-    pdroitedemi = (img_width*3/4,0)
-    pgauchedemi = (img_width/4,0)
+    pdroitedemi = (int(img_width*3/4),0)
+    pgauchedemi = (int(img_width/4),0)
     pgauche = (0,0)
-    cv2.line(path_img, (100,img_height), (100,img_height), (255, 0, 0))
-    p_n,p_m,devant = profile(image,pvoiture,pdevant,img_height-18) # fait cinq slicing
-    p_n,p_m,droite = profile(image,pvoiture,pdroite,img_height-18)
-    p_n,p_m,gauche = profile(image,pvoiture,pgauche,img_height-18)
-    p_n,p_m,droitedemi = profile(image,pvoiture,pdroitedemi,img_height-18)
-    p_n,p_m,gauchedemi = profile(image,pvoiture,pgauchedemi,img_height-18)
-    devants = [devant,0.0] # crée un tuple avec le sclicing et l'angle de celui-ci par rapport a la voiture (utilise le module math)
-    droites = [droite,atan((img_width/2)/img_height-18)]
-    gauches = [gauche,atan((img_width/2)/img_height-18)]
-    droitedemis = [droitedemi,atan((img_width/4)/img_height-18)]
-    gauchedemis = [gauchedemi,atan((img_width/4)/img_height-18)]
-    angle = [devants,droites,gauches,droitedemis,gauchedemis]
-    for i in range(len(angle)) : # applique la fonction distance (défini plus bas)
+    devant = profiles(mask,pvoiture,pdevant,img_height-29,path_img) # appelle cinq fois la fonction profiles
+    droite = profiles(mask,pvoiture,pdroite,img_height-29,path_img)
+    gauche = profiles(mask,pvoiture,pgauche,img_height-29,path_img)
+    droitedemi = profiles(mask,pvoiture,pdroitedemi,img_height-29,path_img)
+    gauchedemi = profiles(mask,pvoiture,pgauchedemi,img_height-29,path_img)
+    devant = [devant,0.0] # crée un tuple avec le sclicing et l'angle de celui-ci par rapport a la voiture (utilise le module math)
+    droite = [droite,atan((img_width/2)/img_height-29)]
+    gauche = [gauche,atan((img_width/2)/img_height-18)]
+    droitedemi = [droitedemi,atan((img_width/4)/img_height-29)]
+    gauchedemi = [gauchedemi,atan((img_width/4)/img_height-29)]
+    angle = [devant,droite,gauche,droitedemi,gauchedemi]
+    for i in range(len(angle)) : # apelle 5 fois la fonction distance 
         angle[i][0] = distance(angle[i][0])
-    angle = max(angle) # prend le plus petit
+    angle = max(angle) # prend la direction dans laquelle la voiture peut rouler le plus longtemps
     angle = int(angle[1]) # renvoi l'angle
     path_dict = {'heading': heading,'angle' : angle}
     return (path_dict, path_img)
 
 def distance(chemin) :
     """Fonction trouvant la distance que la voiture peut parcourire sur la route (fonction fournie) """
-    for dist,j in enumerate(droite):
+    for dist,j in enumerate(chemin):
         if j :
             break
     return dist
-    
+
 def find_center(mask, x, y):
     """Sample the horizontal line passing through coordinate (x,y) for non-zero
        pixels in mask to determine road center"""
@@ -179,6 +176,12 @@ def model_to_heading(model_xy, car_center_xy):
 
     return heading
 
+def profiles(mask, p0, p1, num,path_img):
+    """Fonction créant une liste avec les 'num' pixels se trouvant entre p0 et p1 et trace une ligne rouge entre ces deux point"""
+    cv2.line(path_img, p0, p1, (0, 0, 255)) # trace une ligne rouge entre p0 et p1 (utile pour debugé)
+    n = np.linspace(p0[0], p1[0], num)
+    m = np.linspace(p0[1], p1[1], num)
+    return ndimage.map_coordinates(mask, [m, n], order=0)
 
 def profile(mask, p0, p1, num):
     """Takes `num` equi-distance samples on the straight line between point `p0`
