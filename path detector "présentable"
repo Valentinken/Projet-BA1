@@ -97,19 +97,19 @@ def detect(mask):
 
     p0 = (int(img_width/2+16), int(road_center[1]-55)) # définie un point p0 devant la voiture
     p1 = (int(img_width/2-2), int(road_center[1]-55)) # définie un point p1 devant la voiture
-    devant = profiles(mask,p0,p1,18) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 18 pixels se trouvant entre p1 et p2)
+    devant = profiles(mask,p0,p1,18,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 18 pixels se trouvant entre p1 et p2)
     devant = distance(devant) # appelle la fonction distance
     devant = route(devant,8) # appelle la fonction route
     
     p0 = (int(img_width/2-30), int(road_center[1]-24)) # définie un point p0 à gauche de la voiture
     p1 = (int(img_width/2-30), int(road_center[1]-27)) # définie un point p1 à gauche de la voiture
-    gauche = profiles(mask,p0,p1,4) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2)
+    gauche = profiles(mask,p0,p1,4,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2)
     gauche = distance(gauche)  # appelle la fonction distance qui regarde combien il y a de pixel = 0 dans la liste devant 
     gauche = route(gauche,4) # appelle la fonction route
 
     p0 = (int(img_width/2+36), int(road_center[1]-24)) # définie un point p0 à droite de la voiture
     p1 = (int(img_width/2+36), int(road_center[1]-27)) # définie un point p1 à droite de la voiture
-    droite = profiles(mask,p0,p1,4) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2 et colorie en rouge ces  pixels sur la path_img)
+    droite = profiles(mask,p0,p1,4,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2 et colorie en rouge ces  pixels sur la path_img)
     droite = distance(droite) # appelle la fonction distance 
     droite = route(droite,4) # appelle la fonciton route
 
@@ -183,7 +183,7 @@ def model_to_heading(model_xy, car_center_xy):
 
     return heading
 
-def profiles(mask, p0, p1, num):
+def profiles(mask, p0, p1, num,path_img):
     """Fonction créant une liste avec les 'num' pixels se trouvant entre p0 et p1 et trace une ligne rouge entre ces deux point"""
     cv2.line(path_img, (p0), (p1), (0, 0, 255)) # trace une ligne rouge entre p0 et p1 (utile pour debugé)
     n = np.linspace(p0[0], p1[0], num)
