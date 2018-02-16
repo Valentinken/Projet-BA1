@@ -97,21 +97,21 @@ def detect(mask):
 
     p0 = (int(img_width/2+16), int(road_center[1]-55)) # définie un point p0 devant la voiture
     p1 = (int(img_width/2-2), int(road_center[1]-55)) # définie un point p1 devant la voiture
-    devant = profiles(mask,p0,p1,18,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 18 pixels se trouvant entre p1 et p2)
+    devant = profiles(mask,p0,p1,18,path_img) # apelle la fonction profile 
     devant = distance(devant) # appelle la fonction distance
-    devant = route(devant,8) # appelle la fonction route
+    devant = devant>=8 # fait un test booléen, on considére qu'il y à de la route si il y a plus de 8 pixels noirs
     
     p0 = (int(img_width/2-30), int(road_center[1]-24)) # définie un point p0 à gauche de la voiture
     p1 = (int(img_width/2-30), int(road_center[1]-27)) # définie un point p1 à gauche de la voiture
-    gauche = profiles(mask,p0,p1,4,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2)
+    gauche = profiles(mask,p0,p1,4,path_img) # apelle la fonction profiles
     gauche = distance(gauche)  # appelle la fonction distance qui regarde combien il y a de pixel = 0 dans la liste devant 
-    gauche = route(gauche,4) # appelle la fonction route
+    gauche = gauche>=4 # fait un test booléen, on considére qu'il y à de la route si il y a plus de 4 pixels noirs
 
     p0 = (int(img_width/2+36), int(road_center[1]-24)) # définie un point p0 à droite de la voiture
     p1 = (int(img_width/2+36), int(road_center[1]-27)) # définie un point p1 à droite de la voiture
-    droite = profiles(mask,p0,p1,4,path_img) # apelle la fonction profile pour p0 et p1 (crée une liste avec les 4 pixels se trouvant entre p1 et p2 et colorie en rouge ces  pixels sur la path_img)
+    droite = profiles(mask,p0,p1,4,path_img) # apelle la fonction profiles
     droite = distance(droite) # appelle la fonction distance 
-    droite = route(droite,4) # appelle la fonciton route
+    droite = droite>=4 # fait un test booléen, on considére qu'il y à de la route si il y a plus de 4 pixels noirs
 
     path_dict = {'heading': heading,'distance' : devant,'devant' : devant, 'gauche' : gauche, 'droite' :droite} # dictionaire que l'on va renvoyer
     return (path_dict, path_img)
@@ -123,14 +123,6 @@ def distance(chemin) :
        if chemin[j] == 0 :
             dist += 1
     return dist
-
-def route(dist, minpn) :
-    """Fonction définisant si il y a de la route sur base de la du nombre de pisel noir minimum et d'un nombre de pixels noir minimum (minpn)"""
-    if dist == minpn : # si plus de nmpn sont noir, alors il y a de la route
-        route = True 
-    else : # sinon il n'y en a pas
-        route = False 
-    return route
 
 def find_center(mask, x, y):
     """Sample the horizontal line passing through coordinate (x,y) for non-zero
@@ -180,11 +172,10 @@ def model_to_heading(model_xy, car_center_xy):
     dy = 1. * model_xy[1] - car_center_xy[1]
 
     heading = -np.arctan2(dx, -dy)*180/np.pi
-
     return heading
 
 def profiles(mask, p0, p1, num,path_img):
-    """Fonction créant une liste avec les 'num' pixels se trouvant entre p0 et p1 et trace une ligne rouge entre ces deux point"""
+    """Fonction créant une liste avec les 'num' pixels se trouvant entre p0 et p1 et coloriant en ces pixels en rouge"""
     cv2.line(path_img, (p0), (p1), (0, 0, 255)) # trace une ligne rouge entre p0 et p1 (utile pour debugé)
     n = np.linspace(p0[0], p1[0], num)
     m = np.linspace(p0[1], p1[1], num)
