@@ -293,8 +293,8 @@ def handle_manoeuvre3b2(event) :
     heading = path_dict['angle31']
     logging.info(angle)
     Car.send(0, 0, 0, angle)
+    time.sleep(3)
     event
     Car.send(0, 0, 0, 0)
     event 
-    time.sleep(200)
     pass
