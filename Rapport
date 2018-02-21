@@ -4,42 +4,168 @@
 \usepackage[french]{babel} 
 \usepackage{lmodern} % Pour changer le pack de police
 \usepackage{makeidx}
-%\title{Rapport de fin d'année du projet Pari Bacar}
-%\author{\textsc{Bertoux} Antoine \and \textsc{Kengawe} Valentin \and \textsc{Maillard} Corentin \and \textsc{Rubio López de la Nieta} Mario \and \textsc{Niyomukiza} Micky \and \textsc{Kalli} Ali}
-%\date{\day} % Pour mettre la date du jour, tapez \today 
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{minted}
+\usepackage[margin=3cm,includefoot,footskip=30pt,]{geometry}
+
 
 \title{Rapport de fin d'année du projet Pari Bacar}
 \date{\day}
-\author{\textsc{Bertoux} Antoine \and \textsc{Kengawe} Valentin \and \textsc{Maillard} Corentin \and \textsc{Rubio López de la Nieta} Mario \and \textsc{Niyomukiza} Micky \and \textsc{Kalli} Ali} 
+\author{\textsc{Bertoux} Antoine \and \textsc{Kengawe} Valentin \and \textsc{Maillard} Corentin \and \textsc{Rubio López de la Nieta} Mario \and \textsc{Niyomukiza} Micky \and \textsc{Kalli} Ali \and Chef de groupe : \textsc{Vincent} Mathilde \and Superviseur : \textsc{hasselmann} Ken}
+
 \makeindex
 \begin{document}
+\begin{figure}[!t]
+\begin{center}
+\includegraphics[scale = 0.5]{logo} 
+\end{center}
+\end{figure}
 \maketitle
 \begin{abstract}
-Le but de notre projet est de nous voir réaliser un prototype de voiture autonome. Ce projet s’inscrit dans l’actualité du métier d’ingénieur qui consiste à relever de nouveaux défis comme la réalisation de nouveaux moyens de transport. La voiture autonome se retrouve en plein boom et bénéficie de l’apport de nouvelles technologies. Les différents constructeurs visent l’amélioration du confort et de la sécurité des usagers leur permettant de voyager en toute sécurité à bord de leur véhicule. Les voitures pourront communiquer ensemble, évitant l’erreur humaine, réduisant le nombre d’accidents et les embouteillages. D’un point de vue écologique ces nouvelles voitures autonomes, souvent électrique, faciliteront un partage entre utilisateurs. La voiture ne sera plus immobilisée une grande partie de la journée mais pourra transporter d’autres personnes. Ceci permettra de mieux rentabiliser les véhicules et permettra aussi un accès à la voiture aux personnes n’en ayant pas les moyens d’en faire l’acquisition seul. 
+Le but de notre projet est de nous voir réaliser un prototype de voiture autonome. Ce projet s’inscrit dans l’actualité du métier d’ingénieur qui consiste à relever de nouveaux défis comme la réalisation de nouveaux moyens de transport. La voiture autonome se retrouve en plein boom et bénéficie de l’apport de nouvelles technologies. Les différents constructeurs visent l’amélioration du confort et de la sécurité des usagers leur permettant de voyager en toute sécurité à bord de leur véhicule. Les voitures pourront communiquer ensemble, évitant l’erreur humaine, réduisant l e nombre d’accidents et les embouteillages. D’un point de vue écologique ces nouvelles voitures autonomes, souvent électrique, faciliteront un partage entre utilisateurs. La voiture ne sera plus immobilisée une grande partie de la journée mais pourra transporter d’autres personnes. Ceci permettra de mieux rentabiliser les véhicules et permettra aussi un accès à la voiture aux personnes n’en ayant pas les moyens d’en faire l’acquisition seul. 
 Le projet « LE PARI BACAR » a pour ambition de développer un véhicule autonome capable de réaliser un ensemble de manœuvres assurant la sécurité des passagers. 
 Le lancement du produit est prévu pour Pâques 2018. 
 \end{abstract}
 \part{Hardware}
-\chapter{composant}
-un tableau
-\chapter{montage}
-a
+\chapter{Composant}
+\noindent
+\begin{tabular}{|p{7cm}|p{10cm}|}
+\hline
+ 1. Châssis : Le châssis a été acheté sur le site www.amazon.fr, il a 3 roues : Une devant et 2 arrières. &  \raisebox{-\totalheight}{\includegraphics[scale=0.5]{chassis}}\\
+\hline
+2. Orange Pi : l’Orange Pi nous a été fourni et contient différents programmes python qui nous permettent de faire rouler correctement le prototype. & \raisebox{-\totalheight}{\includegraphics[scale = 0.5]{orangepi}} \\
+\hline
+3. Arduino Nano :nous a été fourni et contient différents programmes en C++ qui nous permettent de faire rouler correctement le prototype. & \raisebox{-\totalheight}{\includegraphics[scale=0.6]{arduino-nano.jpg}}\\
+\hline
+4. Breadboard : C’est une plaque en plastique parsemée de trous dans lesquels on peut brancher plusieurs composants électroniques (Arduino et H-Bridge en ce qui nous concerne). & \raisebox{-\totalheight}{\includegraphics[scale=0.1]{breadboard.png}}\\
+\hline
+5. Batterie : La batterie externe(Powerbank) a été commandée sur  Amazon également et va nous servir à alimenter l’Orange Pi.& \raisebox{-\totalheight}{\includegraphics[scale=0.5]{batterie.jpg}}\\
+\hline
+\end{tabular}
+\newpage
+\noindent
+\begin{tabular}{|p{7cm}|p{10cm}|}
+\hline
+6. Caméra : La caméra nous a été fournie. Elle est compatible avec l’Orange Pi et est branchée à celui-ci. & \raisebox{-\totalheight}{\includegraphics[scale=0.9]{imcamera.jpg}}\\
+\hline
+7. Capteur de bord : Il est fourni et sert à détecter la présence d’un bord en dessous du véhicule. & \raisebox{-\totalheight}{\includegraphics[scale=0.5]{capteurdebord.jpg}}\\
+\hline
+8. Capteur de proximité : Il est aussi fourni et sert à détecter la présence d’un obstacle à 10 cm environ. & \raisebox{-\totalheight}{\includegraphics[scale=0.3]{capteurdeproximiter.png}}\\
+\hline
+9. Colsons : Ils ont été achetés pour attacher différents composants du prototype. & \raisebox{-\totalheight}{\includegraphics[scale=0.5]{colson.jpg}}\\
+\hline
+10. Vis et écrous. & \raisebox{-\totalheight}{\includegraphics[scale=0.3]{visetecorus.jpg}}\\
+\hline
+11. Câbles  & \raisebox{-\totalheight}{\includegraphics[scale=0.3]{cable.jpg}}\\
+\hline
+\end{tabular}
+\chapter{Montage}
+Le montage du prototype ...
+\section{Caméra}
+Installation+calibrage....
+\begin{center}
+\includegraphics{camera.jpg}
+\end{center}
+\begin{center}
+    Champ de vision de la caméra
+\end{center}
+\section{Moteur}
+\subsection{La courbe de tension/vitesse}
 \part{Software}
 \chapter{Orange-pi}
 \section{State machine}
-a
+La state machine est un ensemble de fonction dont le rôle est de traité les information fournie par : l'arduino, le sign detector, le path detector et les commandes envoyer par le groupe. Pour cela il disposent de plusieurs fonction dont la principale est un "loop" (une fonction qui se répète en continue...
+\subsection{L'exécution des différentes manoeuvres}
+................
+\paragraph{Code}
+
+\subsection{Le traitement des information provenant du Path detector}
+\paragraph{La fonction handle\_path\_event}
+La fonction handle\_path\_event est la fonction sensé exécuté les manoeuvre nécessitant le path detector, pour cela elle va cherché dans le dictionnaire global quelle manoeuvre doit elle exécuté ainsi que de quel coté peut elle tourné...
+\paragraph{La fonction heading}
+La fonction heading est la fonction sensé corriger la trajectoire de la voiture pour qu'elle roule droit. Pour cela elle utilise l'angle que fait la voiture avec la route. Nous l'avons modifier pour nous permettre de faire tourner la voiture...
+\paragraph{La fonction handle\_manouvre3b.2}
+La fonction handle\_manouvre3b.2 a pour rôle de traité les information envoyé par le paht detector de la manoeuvre 3b.2 et de faire tourné la voiture dans la direction où elle pourra roulé le plus longtemps...
+\paragraph{Code}
+
+\subsection{Le traitement des information provenant du sign detector}
+?
+\paragraph{Code}
+
+\subsection{Le traitement des information provenant de l'arduino}
+?
+\paragraph{Code}
+
 \section{Path detector}
+Le path detector est un ensemble de fonction dont le rôle est double, il est chargé de déterminer les directions que la voiture peut prendre et de corriger la trajectoire de la voiture de façon à ce qu'elle suive la route, cette partie nous a été fournie. Pour ce faire il utilise principalement deux fonctions. La première, "profiles" (fourni) crée un numpy array contenant les valeurs des pixels situés entre deux points p0 et p1) et le renvoie à la fonction principale du path detector. ("detect"). Nous l'avons légèrement modifié pour qu'elle trace une ligne rouge entre p0 et p1 (ces output ont aussi été légèrement simplifié). La deuxième, 'distance' (fournit) passe en revue l'échantillon et compte le nombre de pixels égal à zéro jusqu'à ce quelle tombe face a un pixels égale a un et renvoie ce nombre à la fonction principale du path detector ("detect"). Mais pour notre path detector principale nous l'avons légèrement modifié de façon a ce qu'elle ne s'arrête pas lorsqu'elle tombe sur un pixel égale a un et sonde l'entièreté de l'échantillon.
+\paragraph{Illustration}
+\begin{center}
+\includegraphics{imagenumpy.png}
+\end{center}
+\begin{center}
+    Voila une image qui nous a été fournie lors du tutorielle numpy, c'est a cela que ressemble l'image du path detector (une image redressé, en noir et blanc).
+\end{center}
+\paragraph{Code}
+\begin{center}
+    Les deux fonctions distances, au dessus celle du path detector global et en dessous celle du path detector 3b.2. Et enfin la fonction proflies.
+\end{center}
+\inputminted{python}{distances.py}
 \subsection{Path detector principale}
-a
-\subsection{Path detector de la manoeucvre 3b.2}
-a
+\paragraph{Principe de fonctionnement}
+Notre path detetor principale nous permet d'exécuter toutes les manoeuvres de catégorie trois et quatre a l'exception de la 3b.2 et de la 3b.7. Il repose sur un principe simple, il utilise la fonction "s" pour échantillonner une ligne horizontale devant la voiture pour savoir si la route continue et renvoie un booléen. Il échantillonne aussi deux lignes verticales, une à droite et une à gauche de l'axe de la voiture de pour savoir si la voiture peut tourner et renvoie deux autres booléens. Pour analyser les échantillons, le path detector principale les envoie à la fonction "distance" qui lui renvoie un nombre, au-delà d'une certaine valeur, le path detector principale considère qu'il y a de la route. Le path detector prend donc en imput une image et renvoie l'angle que la voiture fait avec la route (code fournit de base) et trois booléens qui indiquent à la voiture dans quelle direction elle peut aller.
+\paragraph{Illustration}
+\begin{center}
+\includegraphics{imagepathdetictor.png} 
+\end{center}
+\begin{center}
+    Un screenshot de l'image mask où les lignes échantillonnées par le path detector ont été tracé en rouge.
+\end{center}
+\paragraph{Code}
+\begin{center}
+
+Ce que nous avons ajouter a la fonction detec (fonction main du path detector) :
+\end{center}
+\inputminted{python}{pahtprincipal.py}
+\subsection{Path detector de la manoeuvre 3b.2}
+\paragraph{Principe de fonctionnement}
+Ce path detecor permet, comme son nom l'indique d'exécuter la manoeuvre 3b.2 qui consiste à trouver la direction la plus dégagée et pivoter dans cette direction. Pour cela il utilise la fonction "profiles" pour échantillonne cinq lignes partant de la voiture et finissant en haut de l'image. Il renvoie à la state machine l'angle que celle sur laquelle la voiture peut rouler le plus longtemps fait avec la route.
+\paragraph{Illustration}
+\begin{center}
+\includegraphics{imagepathdetector2.png}
+\end{center}
+\begin{center}
+Un screenshot de l'image mask où les lignes échantillonnées par le path detector ont été tracé en rouge.
+\end{center}
+\paragraph{Code}
+\begin{center}
+    Ce que nous avons ajouter a la fonction detec (fonction main du path detector).
+\end{center}
+\inputminted{python}{path3b.py}
+\subsection{Autre design envisager}
+Lors de l'évaluation de mis-parcours, les techniciens nous avaient conseillé d'échantillonner sur un demi-cercle, malheureusement nous n'avons trouvé aucune fonction permettant d'échantillonner un demi-cercle. Nous avons aussi essayé de tracer un demi-cercle avec plusieurs droites mais, nous nous sommes vite rendu compte que pour être efficace, le path detector devait détecter qu'il y avait une fin de route bien avant de savoir s'il pouvait tourner, l'échantillon horizontal devait donc être significativement plus loin de la voiture que les échantillons verticaux. Tracé un demi-cercle avec des lignes était donc inutile car seules les lignes devant et sur les côtés était utile. Les autres ne faisaient pratiquement rien tout en alourdissant le code et en utilisant de la mémoire. Notre design a comme principales qualités d'être simple, efficace et assez peu gourmand en mémoire vive (ce qui permet de le faire tourner plus souvent).
 \section{Sign detector}
 a
 \chapter{Arduino}
 a
+\part{Fonctionnement du groupe}
+\chapter{SWOT}
+\chapter{La méthode Agile}
+\chapter{La communication au seins du groupe}
+\section{Les outils}
+\subsection{Facbook}
+\subsection{Github}
+\subsection{Sharelatex}
+\subsection{Google Drive}
+\subsection{Trello}
+\appendix
+\chapter{Code du Path detector principale}
+\inputminted{python}{pathdetectorprincipal.py}
+\chapter{Code du Path detector de la fonction 3b.2}
+\inputminted{python}{pathdetector3b2.py}
+\chapter{Code de la State machine}
+\inputminted{python}{statemachine.py}
 \tableofcontents
-
-
 Bla\index{bla} bla bla
 
 \listoffigures
