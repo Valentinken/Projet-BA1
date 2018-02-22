@@ -1,0 +1,81 @@
+#!/usr/bin/python
+import logging
+import numpy as np
+import cv2
+import _tkinter
+
+logging.info('Template SignDetector has been initialized')
+
+
+def detect(bb, sign):
+    """This function receives:
+    - sign: a color image (numpy array of shape (h,w,3))
+    - bb which is the bounding box of the sign in the original camera frame
+      bb = (x0,y0, w, h) where w and h are the widht and height of the sign
+      (can be used to determine e.g., whether the sign is to the left or
+       right of the car's center)
+    The goal of this method is to recognize which of the following signs it
+    really is:
+    - a stop sign
+    - a turn left sign
+    - a turn right sign
+    - None, if the sign is determined to be none of the above
+
+    Returns: a dictionary that contains information about the recognized
+    sign. This dict is transmitted to the state machine it should contain
+    all the information that the state machine to act upon the sign (e.g.,
+    the type of sign, estimated distance).
+    """
+    import _tkinter
+    M = sign
+    import numpy as np
+    a = M.shape
+    Nligne = a[0]
+    Ncolonne = a[1]
+    g = l = o = fdp = 0
+    for i in range (Nligne):
+        for j in range (Ncolonne):
+            if M[i,j,0] > 80 or M[i,j,2] > 80:
+                o = o + 1
+    rapport = 10000*o // (Ncolonne*Nligne)
+    if Nligne > (1.5*Ncolonne) or Ncolonne > (1.5*Nligne) or (rapport < 3000) or Nligne > 35 or Ncolonne > 35 or (Nligne*Ncolonne) > 750 or bb[0] < ((2*Ncolonne)/3):
+        T = None
+    else:
+        count_red = count_blue = a = 0
+        for i in range (Nligne):
+            for j in range (Ncolonne):
+                count_blue = M[i,j,2] + count_blue
+                count_red = M[i,j,0] + count_red
+                a = a + 1
+        av_blue = count_blue/a
+        av_red = count_red/a
+        if av_red < av_blue:
+            T = "Stop"
+        else:
+            Mg = M[:,:(Ncolonne//2),:]
+            Md = M[:,(Ncolonne//2):,:]
+            h = k = 0
+            for i in range (Nligne):
+                for j in range (Mg.shape[1]):
+                    if Mg[i,j,2] > 50 and Mg[i,j,1] < (1.5*Mg[i,j,1]):
+                        h = h + 1
+                    else:
+                        pass
+            print ("h = ", h)
+            for i in range (Nligne):
+                for j in range (Md.shape[1]):
+                    if Md[i,j,2] > 50 and Md[i,j,1] < (1.5*Md[i,j,1]):
+                        k = k + 1
+                    else:
+                        pass
+            print ("k = ",k)
+            if h > k:
+                T = "left"
+            else:
+                T = "right"
+    (x0, y0, w, h) = bb
+    dist = (bb[3]/3)
+    logging.info('Returning None by default')
+    Q = {"sign":T}
+    dist = {'x0': x0, 'y0': y0, 'w': w, 'h': h}
+    return (Q, dist)
