@@ -1,4 +1,16 @@
-#!/usr/bin/python
+"""This is a template for Sign Detector modules.
+
+   A Sign Detector module is a python file that contains a `detect` function
+   that is capable of analyzing a color image which, according to the image
+   server, likely contains a road sign. The analysis should identify the kind
+   of road sign contained in the image.
+
+   See the description of the `detect` function below for more details.
+
+   Please note: implementors are free to add additional (auxiliary) methods and
+   variables to the file (called from within the detect() function)
+"""
+
 import logging
 import numpy as np
 import cv2
@@ -33,43 +45,59 @@ def detect(bb, sign):
     Nligne = a[0]
     Ncolonne = a[1]
     g = l = o = fdp = 0
+    """
+    Test pour vérifier si l'image découpée est bien un panneau.
+    Le test consiste à vérifier si l'image est suffisement intense en rouge ou en bleue, que le format correspond a un carré ou encore que la taille de l'image ne dépasse pas une certaine limite.
+    Si l'image n'est pas un panneau, on return: None. Si c'est un panneau, on commence le test de différenciation des panneaux.
+    """
     for i in range (Nligne):
         for j in range (Ncolonne):
-            if M[i,j,0] > 80 or M[i,j,2] > 80:
+            if M[i,j,0] > 60 or M[i,j,2] > 60:
                 o = o + 1
     rapport = 10000*o // (Ncolonne*Nligne)
     if Nligne > (1.5*Ncolonne) or Ncolonne > (1.5*Nligne) or (rapport < 3000) or Nligne > 35 or Ncolonne > 35 or (Nligne*Ncolonne) > 750 or bb[0] < ((2*Ncolonne)/3):
         T = None
     else:
+        """
+        Nous commençons ici à faire la moyenne d'intensité de l'image en rouge et en bleu.
+        Si la moyenne rouge est supérieur à la bleue, on return: stop.
+        Si la moyenne bleue est supérieur à la rouge, on lance le test de différenciation des panneaux directionnels.
+        """
         count_red = count_blue = a = 0
         for i in range (Nligne):
             for j in range (Ncolonne):
-                count_blue = M[i,j,2] + count_blue
-                count_red = M[i,j,0] + count_red
+                count_blue = M[i,j,0] + count_blue
+                count_red = M[i,j,2] + count_red
                 a = a + 1
         av_blue = count_blue/a
         av_red = count_red/a
-        if av_red < av_blue:
+        if av_red > av_blue:
             T = "Stop"
         else:
+            """
+            Pour différencier le panneau droite du panneau gauche, nous coupons la matrice M en 2, une partie droite (Md) et une partie gauche (Mg).
+            """
             Mg = M[:,:(Ncolonne//2),:]
             Md = M[:,(Ncolonne//2):,:]
-            h = k = 0
+            blue_pixel_l = blue_pixel_r = 0
+            """
+            Nous comptons ici le nombre de pixel bleus dans la partie droite et la partie gauche.
+            Pour ne pas prendre en compte les pixels blancs (qui sont également intenses en bleu), on compte un pixel bleu comme un pixel intense sur la couche bleue et 1.5 fois moin intense en vert
+            (le vert se trouve sur la couche 1)
+            """
             for i in range (Nligne):
                 for j in range (Mg.shape[1]):
-                    if Mg[i,j,2] > 50 and Mg[i,j,1] < (1.5*Mg[i,j,1]):
-                        h = h + 1
+                    if Mg[i,j,0] > 80 and Mg[i,j,0] > (1.5*Mg[i,j,1]):
+                        blue_pixel_l = blue_pixel_l + 1
                     else:
                         pass
-            print ("h = ", h)
             for i in range (Nligne):
                 for j in range (Md.shape[1]):
-                    if Md[i,j,2] > 50 and Md[i,j,1] < (1.5*Md[i,j,1]):
-                        k = k + 1
+                    if Md[i,j,0] > 80 and Md[i,j,0] > (1.5*Md[i,j,1]):
+                        blue_pixel_r = blue_pixel_r + 1
                     else:
                         pass
-            print ("k = ",k)
-            if h > k:
+            if blue_pixel_l < blue_pixel_r:
                 T = "left"
             else:
                 T = "right"
@@ -77,5 +105,4 @@ def detect(bb, sign):
     dist = (bb[3]/3)
     logging.info('Returning None by default')
     Q = {"sign":T}
-    dist = {'x0': x0, 'y0': y0, 'w': w, 'h': h}
-    return (Q, dist)
+    return Q
