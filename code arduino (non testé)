@@ -1,0 +1,49 @@
+#include <bacarComm.h>
+#include <bacarMotor.h>
+BacarMotor motorA(9, 7, 8);
+BacarMotor motorB(10, 11, 12);
+BacarComm comm;
+bool ledState;
+
+void setup() {
+  // Configure la LED pour pouvoir l'utiliser dans loop()
+  pinMode(LED_BUILTIN, OUTPUT);
+  ledState = LOW;
+  // Initialise l'objet comm
+  comm.begin();
+}
+
+void setup() {
+  // Configure la LED pour pouvoir l'utiliser dans loop()
+  pinMode(LED_BUILTIN, OUTPUT);
+  // Initialise les objets moteurs
+  motorA.begin();
+  motorB.begin();
+}
+
+void loop() {
+  int32_t x, y;
+  float u, v;
+  if digitalRead(pinDigital) or analogRead(pinAnalogique):
+      motorA.actuate(0);
+      motorB.actuate(0);
+  // Vérifie si un nouveau message de l'Orange PI a été reçu
+  if (comm.newMessage() == true) {
+    // On lit les 4 valeurs contenues dans le message
+    x = comm.xRead();
+    y = comm.yRead();
+    u = comm.uRead();
+    v = comm.vRead();
+    if v == 0 :  
+        motorA.actuate(0.2*u*);
+        motorB.actuate(0.01+0.2*u);
+    else if v < 0 :        
+        motorA.actuate(0.2*u*);
+        motorB.actuate(0.01-0.2*u*(1/v)); // Le moins évide que le moteur tourne dans l'autre sens
+    else :    
+        motorA.actuate(0.2*u*(1/v));
+        motorB.actuate(0.01+0.2*u);
+    // et on les renvoie à l'Orange PI
+    comm.sendMessage(x, y, u, v);
+  }
+}
