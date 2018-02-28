@@ -39,9 +39,9 @@ void loop() {
         motorB.actuate(0.01+0.2*u);
     else if v < 0 :        
         motorA.actuate(0.2*u*);
-        motorB.actuate(0.01-0.2*u*(1/v)); // Le moins évide que le moteur tourne dans l'autre sens
+        motorB.actuate(0.01-0.2*u*(1/1+v)); // Le moins évide que le moteur tourne dans l'autre sens
     else :    
-        motorA.actuate(0.2*u*(1/v));
+        motorA.actuate(0.2*u*(1/1+v));
         motorB.actuate(0.01+0.2*u);
     // et on les renvoie à l'Orange PI
     comm.sendMessage(x, y, u, v);
