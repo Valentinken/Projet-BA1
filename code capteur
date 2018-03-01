@@ -52,7 +52,7 @@ void loop() {
         motorA.actuate(0);
         motorB.actuate(0);     
     // et on les renvoie à l'Orange PI
-       bool y== true;
+       bool x = true;
        comm.sendMessage(x, y, u, v) 
     }
 }
