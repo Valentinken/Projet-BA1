@@ -43,7 +43,7 @@ void loop() {
         motorB.actuate(0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         }
     else {
-        motorA.actuate(0.2*u*(1/1+v));
+        motorA.actuate(0.2*u*(pow((4/5),v)));
         motorB.actuate(0.01+0.2*u);
         }
         }
