@@ -6,14 +6,12 @@ BacarComm comm;
 bool ledState;
 
 void setup() {
+
   // Configure la LED pour pouvoir l'utiliser dans loop()
   pinMode(LED_BUILTIN, OUTPUT);
   ledState = LOW;
   // Initialise l'objet comm
   comm.begin();
-}
-
-void setup() {
   // Configure la LED pour pouvoir l'utiliser dans loop()
   pinMode(LED_BUILTIN, OUTPUT);
   // Initialise les objets moteurs
