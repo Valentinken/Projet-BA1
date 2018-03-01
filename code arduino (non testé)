@@ -22,7 +22,7 @@ void setup() {
 void loop() {
   int32_t x, y;
   float u, v;
-  //if digitalRead(pinDigital) or analogRead(pinAnalogique):
+  //if (digitalRead(pinDigital) or analogRead(pinAnalogique))
     //  motorA.actuate(0);
       //motorB.actuate(0);
   // Vérifie si un nouveau message de l'Orange PI a été reçu
@@ -32,16 +32,19 @@ void loop() {
     y = comm.yRead();
     u = comm.uRead();
     v = comm.vRead();
-    if v == 0 :  
+    if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
-    else if v < 0 :        
+        }
+    else if (v < 0) {     
         motorA.actuate(0.2*u);
         motorB.actuate(0.01-0.2*u*(1/1+v)); // Le moins évide que le moteur tourne dans l'autre sens
-    else :    
+        }
+    else {
         motorA.actuate(0.2*u*(1/1+v));
         motorB.actuate(0.01+0.2*u);
     // et on les renvoie à l'Orange PI
-    comm.sendMessage(x, y, u, v);
+    //comm.sendMessage(x, y, u, v);
+    }
   }
 }
