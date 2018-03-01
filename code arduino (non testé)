@@ -1,5 +1,6 @@
 #include <bacarComm.h>
 #include <bacarMotor.h>
+#include <cmath> 
 BacarMotor motorA(9, 7, 8);
 BacarMotor motorB(10, 11, 12);
 BacarComm comm;
@@ -38,7 +39,7 @@ void loop() {
         }
     else if (v < 0) {     
         motorA.actuate(0.2*u);
-        motorB.actuate(0.01-0.2*u*(1/1+v)); // Le moins évide que le moteur tourne dans l'autre sens
+        motorB.actuate(0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         }
     else {
         motorA.actuate(0.2*u*(1/1+v));
