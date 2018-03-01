@@ -22,9 +22,9 @@ void setup() {
 void loop() {
   int32_t x, y;
   float u, v;
-  if digitalRead(pinDigital) or analogRead(pinAnalogique):
-      motorA.actuate(0);
-      motorB.actuate(0);
+  //if digitalRead(pinDigital) or analogRead(pinAnalogique):
+    //  motorA.actuate(0);
+      //motorB.actuate(0);
   // Vérifie si un nouveau message de l'Orange PI a été reçu
   if (comm.newMessage() == true) {
     // On lit les 4 valeurs contenues dans le message
