@@ -33,10 +33,10 @@ void loop() {
     u = comm.uRead();
     v = comm.vRead();
     if v == 0 :  
-        motorA.actuate(0.2*u*);
+        motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
     else if v < 0 :        
-        motorA.actuate(0.2*u*);
+        motorA.actuate(0.2*u);
         motorB.actuate(0.01-0.2*u*(1/1+v)); // Le moins évide que le moteur tourne dans l'autre sens
     else :    
         motorA.actuate(0.2*u*(1/1+v));
