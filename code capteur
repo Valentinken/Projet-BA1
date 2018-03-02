@@ -47,7 +47,6 @@ void loop() {
         motorB.actuate(0.01+0.2*u);
         }
         }
-        }
      if (devant == LOW){ on detect un obstacle
         motorA.actuate(0);
         motorB.actuate(0);     
