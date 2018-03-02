@@ -37,7 +37,7 @@ logging.info('Template StateMachine has been initialized')
 # successive calls to loop()
 croisement = 0
 state = IDLE
-manoeuvre = {'pathdetector' : True, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False} # crée un  dictionnaire globale permettant d'activé (ou non les manouvres)
+manoeuvre = {'pathdetector' : True, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False, 'sign' : True} # crée un  dictionnaire globale permettant d'activé (ou non les manoeuvres)
 panneau = False
 def loop():
     '''State machine control loop.
@@ -147,7 +147,6 @@ def loop():
             Car.send(0, 0, 0, 0)
             state = STOPPED
             pass
-
         if event.type == Event.CMD and event.val == "3a.1":
             logging.info("maneuvre 3a.1")
             manoeuvre['manoeuvre3b.1'] = True
@@ -248,7 +247,7 @@ def loop():
             # actuate car coresspondingly, change state if relevant
             handle_path_event(event)
             pass
-        elif event.type == Event.SIGN:
+        elif event.type == Event.SIGN and manoeuvre['pathdetector'] :
             # You received the SIGN dictionary emitted by the sign detector
             # you can access this dictionary in event.val
             # actuate car coresspondingly, change state if relevant
@@ -290,7 +289,7 @@ def handle_path_event(event):
         distance = path_dict['distance']
         gauche = path_dict['gauche']
         droite = path_dict['droite']
-            if manoeuvre['manoeuvre4.4'] and droite :
+        if manoeuvre['manoeuvre4.4'] and droite :
                 None # la fonction heading fait tout le boulot
         if not panneau : # si aucun panneau n'est détécté
             if manoeuvre['manoeuvre3b.1'] :
@@ -324,24 +323,26 @@ def handle_path_event(event):
                 logging.info('panneau stop détécté') 
                 Car.send(0, 0 ,0 ,0)  
                 manoeuvre['manoeuvre4.1'] = False
-                time.sleep(5)    
+                time.sleep(3)
+                Car.send(0, 0 ,2 ,0)    
+                time.sleep(3)
                 manoeuvre['manoeuvre4.1'] = True     
         elif panneau == 'left' :
-            if manouvre['manoeuvre3a.2'] :
+            if manoeuvre['manoeuvre3a.2'] :
                 Car.send(0, 0, 0, 0)   
                 logging.info('panneau tourner à gauche détécté') 
-                manouvre['manouvre3a.2'] = False
-            if manouvre['manoeuvre4.3'] and gauche:
+                manoeuvre['manoeuvre3a.2'] = False
+            if manoeuvre['manoeuvre4.3'] and gauche:
                 logging.info('panneau tourner à gauche détécté') 
                 heading+= 10000 
         elif panneau == 'right' :
-            if manouvre['manoeuvre3a.2'] :
+            if manoeuvre['manoeuvre3a.2'] :
                 Car.send(0, 0, 0, 0)   
                 logging.info('panneau toruner à droite détécté')   
-                manouvre['manouvre3a.2'] = False
-            if manouvre['manoeuvre4.3'] and gauche:
+                manoeuvre['manoeuvre3a.2'] = False
+            if manoeuvre['manoeuvre4.2'] and droite:
                 logging.info('panneau tourner à droite détécté') 
-                heading-= 10000 
+                heading -= 10000 
         actuate_heading(event,heading) # enclanche la fonction corrigent la trajectoire de la voiture
     else : # on n'est pas en mouvement
         return
@@ -382,10 +383,11 @@ def handle_manoeuvre3b2(event) :
     event 
     time.sleep(200)
     pass
-def emergency_stop(event)
+def emergency_stop(event) :
     global state
     global manoeuvre
     Car.send(0, 0, 0, 0)
     state = STOPPED
     event.val = 0
-    manoeuvre = {'pathdetector' : False, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False} 
+    manoeuvre = {'pathdetector' : False, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False, 'sign' : False} 
+    pass
