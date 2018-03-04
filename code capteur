@@ -1,6 +1,6 @@
 #include <bacarComm.h>
 #include <bacarMotor.h>
-#include <cmath> 
+//#include <cmath> 
 BacarMotor motorA(9, 7, 8);
 BacarMotor motorB(10, 11, 12);
 BacarComm comm;
@@ -8,7 +8,7 @@ bool ledState;
 int capteurprox = 0; // emplacement du capteur de proximité
 int devant =0; // de base on ne détécte rien
 void setup() {
-  serial.begin(9600);
+  Serial.begin(9600);
   pinMode(capteurprox,INPUT);
   // Configure la LED pour pouvoir l'utiliser dans loop()
   pinMode(LED_BUILTIN, OUTPUT);
@@ -26,7 +26,7 @@ void loop() {
   int32_t x, y;
   float u, v;
   devant = digitalRead(capteurprox); // lit la valeur
-  Serial.printlnt(devant); //print la valeur
+  Serial.println(devant); //print la valeur
   if (devant==HIGH){ // on ne detect rien
   if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
     // On lit les 4 valeurs contenues dans le message
@@ -47,11 +47,12 @@ void loop() {
         motorB.actuate(0.01+0.2*u);
         }
         }
-     if (devant == LOW){ on detect un obstacle
+  }
+     if (devant == LOW){ //on detect un obstacle
         motorA.actuate(0);
         motorB.actuate(0);     
     // et on les renvoie à l'Orange PI
        bool x = true;
-       comm.sendMessage(x, y, u, v) 
+       comm.sendMessage(x, y, u, v);
     }
 }
