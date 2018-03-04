@@ -1,0 +1,82 @@
+#include <bacarComm.h>
+#include <bacarMotor.h>
+BacarMotor motorA(9, 7, 8);
+BacarMotor motorB(10, 11, 12);
+BacarComm comm;
+bool ledState;
+int capteurprox = 0; // emplacement du capteur de proximité
+int capteurgauche = 0; // emplacement du capteur gouche
+int capteurdroite = 0; // emplacement du capteur droit
+int devant =0; // de base on ne détécte rien
+int gauche =0;
+int droite =0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(capteurprox,INPUT);
+  pinMode(capteurgauche,INPUT);
+  pinMode(capteurdroite,INPUT);
+
+  // Configure la LED pour pouvoir l'utiliser dans loop()
+  pinMode(LED_BUILTIN, OUTPUT);
+  ledState = LOW;
+  // Initialise l'objet comm
+  comm.begin();
+  // Configure la LED pour pouvoir l'utiliser dans loop()
+  pinMode(LED_BUILTIN, OUTPUT);
+  // Initialise les objets moteurs
+  motorA.begin();
+  motorB.begin();
+}
+
+void loop() {
+  int32_t x, y;
+  float u, v;
+  devant = digitalRead(capteurprox); // lit la valeur
+  gauche = digitalRead(capteurgauche); // lit la valeur
+  droite = digitalRead(capteurdroite); // lit la valeur
+  Serial.println(devant); //print la valeur
+  if (devant==HIGH && gauche==HIGH && droite == HIGH){ // on ne detect rien
+  if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
+    // On lit les 4 valeurs contenues dans le message
+    x = comm.xRead();
+    y = comm.yRead();
+    u = comm.uRead();
+    v = comm.vRead();
+    if (v == 0) {
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.01+0.2*u);
+        }
+    else if (v < 0) {
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
+        }
+    else {
+        motorA.actuate(0.2*u*(pow((4/5),v)));
+        motorB.actuate(0.01+0.2*u);
+        }
+        }
+  }
+     else if (devant == LOW){ //on detect un obstacle
+        motorA.actuate(0);
+        motorB.actuate(0);
+       bool x = true;
+       comm.sendMessage(x, y, u, v); // et on les renvoie à l'Orange PI
+    }
+     else if (gauche == LOW){//on detect un obstacle
+        motorA.actuate(-0.6);
+        motorB.actuate(-0.5);
+        delay(2000);
+        motorA.actuate(0.5);
+        motorB.actuate(0.6);
+        delay(1000);
+    }
+    else if (droite == LOW){//on detect un obstacle
+        motorA.actuate(-0.5);
+        motorB.actuate(-0.6);
+        delay(2000);
+        motorA.actuate(0.6);
+        motorB.actuate(0.5);
+        delay(1000);
+    }
+}
