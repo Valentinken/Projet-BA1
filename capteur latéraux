@@ -5,8 +5,8 @@ BacarMotor motorB(10, 11, 12);
 BacarComm comm;
 bool ledState;
 int capteurprox = 0; // emplacement du capteur de proximité
-int capteurgauche = 0; // emplacement du capteur gouche
-int capteurdroite = 0; // emplacement du capteur droit
+int capteurgauche = 4; // emplacement du capteur gouche
+int capteurdroite = 8; // emplacement du capteur droit
 int devant =0; // de base on ne détécte rien
 int gauche =0;
 int droite =0;
