@@ -44,16 +44,16 @@ void loop() {
     u = comm.uRead();
     v = comm.vRead();
     if (v == 0) {
-        motorA.actuate(0.2*u);
-        motorB.actuate(0.01+0.2*u);
+        motorA.actuate(-0.2*u);
+        motorB.actuate(-0.01+0.2*u);
         }
     else if (v < 0) {
-        motorA.actuate(0.2*u);
-        motorB.actuate(0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
+        motorA.actuate(-0.2*u);
+        motorB.actuate(-0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         }
     else {
-        motorA.actuate(0.2*u*(pow((4/5),v)));
-        motorB.actuate(0.01+0.2*u);
+        motorA.actuate(-0.2*u*(pow((4/5),v)));
+        motorB.actuate(-0.01+0.2*u);
         }
         }
   }
@@ -65,18 +65,18 @@ void loop() {
     }
      else if (gauche == LOW){//on detect un obstacle
         motorA.actuate(-0.6);
-        motorB.actuate(-0.5);
+        motorB.actuate(0.5);
         delay(2000);
-        motorA.actuate(0.5);
-        motorB.actuate(0.6);
+        motorA.actuate(-0.5);
+        motorB.actuate(-0.6);
         delay(1000);
     }
     else if (droite == LOW){//on detect un obstacle
-        motorA.actuate(-0.5);
-        motorB.actuate(-0.6);
+        motorA.actuate(0.5);
+        motorB.actuate(0.6);
         delay(2000);
-        motorA.actuate(0.6);
-        motorB.actuate(0.5);
+        motorA.actuate(-0.6);
+        motorB.actuate(-0.5);
         delay(1000);
     }
 }
