@@ -15,7 +15,7 @@
    and decide on how to drive the car correspondingly. See the description of
    the `loop` method below for more details.
 """
-
+from time import time
 import logging
 import time
 from event import Event
@@ -35,9 +35,12 @@ logging.info('Template StateMachine has been initialized')
 
 # The next variable is a global variable used to store the state between
 # successive calls to loop()
+st = 0
+ga = 0
+dr = 0
 croisement = 0
 state = IDLE
-manoeuvre = {'pathdetector' : True, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False} # crée un  dictionnaire globale permettant d'activé (ou non les manouvres)
+manoeuvre = {'pathdetector' : True, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False, 'sign' : True} # crée un  dictionnaire globale permettant d'activé (ou non les manoeuvres)
 panneau = False
 def loop():
     '''State machine control loop.
@@ -147,7 +150,6 @@ def loop():
             Car.send(0, 0, 0, 0)
             state = STOPPED
             pass
-
         if event.type == Event.CMD and event.val == "3a.1":
             logging.info("maneuvre 3a.1")
             manoeuvre['manoeuvre3b.1'] = True
@@ -248,13 +250,14 @@ def loop():
             # actuate car coresspondingly, change state if relevant
             handle_path_event(event)
             pass
-        elif event.type == Event.SIGN:
+        elif event.type == Event.SIGN and manoeuvre['sign'] :
             # You received the SIGN dictionary emitted by the sign detector
             # you can access this dictionary in event.val
             # actuate car coresspondingly, change state if relevant
             signdict = event.val
             panneau = signdict["sign"]
-
+            logging.info(panneau)
+            signrepertorie(panneau)
             pass
         elif event.type == Event.CAR:
             # You received a message from the arduino that is operating the car
@@ -265,24 +268,20 @@ def loop():
             # and you should stop ?)
             logging.info("Received CAR event with x=%d, y=%d, u=%f, v=%f" %
                 (event.val['x'], event.val['y'], event.val['u'], event.val['v']))
-            if x :
+            if event.val['x'] :
                 emergency_stop(event)    
             pass 
     else:
         # we are in a state that we shouldn't be actuating
         return
-def emergency_stop():
-    global state
-    Car.send(0, 0, 0.0, 0.0)
-    event
-    state = STOPPED
-    pass
-
 def handle_path_event(event):
     global state
     global manoeuvre
     global panneau
     global croisement
+    global st
+    global dr
+    global ga
     path_dict = event.val
     if state == MOVING :
         heading = path_dict['heading']
@@ -290,9 +289,9 @@ def handle_path_event(event):
         distance = path_dict['distance']
         gauche = path_dict['gauche']
         droite = path_dict['droite']
-            if manoeuvre['manoeuvre4.4'] and droite :
+        if manoeuvre['manoeuvre4.4'] and droite :
                 None # la fonction heading fait tout le boulot
-        if not panneau : # si aucun panneau n'est détécté
+        if not st and not ga and not dr : # si aucun panneau n'est détécté
             if manoeuvre['manoeuvre3b.1'] :
                 None # la fonction heading fait tout le boulot
             elif manoeuvre['manoeuvre3b.3'] :
@@ -314,38 +313,46 @@ def handle_path_event(event):
             else : # fonction pour faire mes test (GO)
                 if gauche :
                     heading+= 10000 # demmande à la voiture de tourné fortement à gauche
-        elif panneau == 'Stop':
-            if manoeuvre['manoeuvre3a.1'] :
-                Car.send(0, 0, 0, 0)  
-                logging.info('panneau stop détécté') 
-                manoeuvre['manoeuvre3a.1'] = False 
-            elif manoeuvre['manoeuvre4.1'] :
-                Car.send(0, 0, 0, 0)  
-                logging.info('panneau stop détécté') 
-                Car.send(0, 0 ,0 ,0)  
-                manoeuvre['manoeuvre4.1'] = False
-                time.sleep(5)    
-                manoeuvre['manoeuvre4.1'] = True     
-        elif panneau == 'left' :
-            if manouvre['manoeuvre3a.2'] :
-                Car.send(0, 0, 0, 0)   
-                logging.info('panneau tourner à gauche détécté') 
-                manouvre['manouvre3a.2'] = False
-            if manouvre['manoeuvre4.3'] and gauche:
-                logging.info('panneau tourner à gauche détécté') 
-                heading+= 10000 
-        elif panneau == 'right' :
-            if manouvre['manoeuvre3a.2'] :
-                Car.send(0, 0, 0, 0)   
-                logging.info('panneau toruner à droite détécté')   
-                manouvre['manouvre3a.2'] = False
-            if manouvre['manoeuvre4.3'] and gauche:
-                logging.info('panneau tourner à droite détécté') 
-                heading-= 10000 
+        elif manoeuvre['manoeuvre3a.1'] :
+            Car.send(0, 0, 0, 0)  
+            logging.info('panneau stop détécté') 
+            manoeuvre['manoeuvre3a.1'] = False 
+        elif manoeuvre['manoeuvre4.1'] and (time.time()-st)<1 :
+            logging.info("========================================================")
+            Car.send(0, 0, 0, 0) 
+            event 
+            logging.info('panneau stop détécté') 
+            time.sleep(3)          
+            Car.send(0, 0, 2, 0) 
+            event                 
+        elif manoeuvre['manoeuvre3a.2'] and st !=0:
+            Car.send(0, 0, 0, 0)   
+            logging.info('panneau tourner à gauche détécté') 
+            manoeuvre['manoeuvre3a.2'] = False
+        elif manoeuvre['manoeuvre3a.2'] and dr!=0:
+            Car.send(0, 0, 0, 0)   
+            logging.info('panneau tourner à droite détécté')   
+        elif manoeuvre['manoeuvre4.3'] and gauche and ga !=0 :
+            logging.info('panneau tourner à gauche détécté') 
+            heading+= 10000 
+            manoeuvre['manoeuvre3a.2'] = False
+        elif manoeuvre['manoeuvre4.2'] and droite and dr !=0:
+            logging.info('panneau tourner à droite détécté') 
+            heading -= 10000 
         actuate_heading(event,heading) # enclanche la fonction corrigent la trajectoire de la voiture
     else : # on n'est pas en mouvement
         return
-     
+def signdisable(numero) :
+    global manoeuvre
+    global panneau
+    manoeuvre['sign'] = False
+    manoeuvre[numero] = False
+    panneau = False
+    Car.send(0, 0 ,2 ,0)    
+    time.sleep(4)
+    manoeuvre['sign'] = True
+    manoeuvre[numero] = True
+    pass
 def actuate_heading(event,heading): # Fonction encore en phase de test
     if heading > 9000 : # fait tourné la voiture fortement à gauche
         state = MOVING
@@ -368,9 +375,6 @@ def actuate_heading(event,heading): # Fonction encore en phase de test
         Car.send(0, 0, 2, heading)
         event
     pass   
-def handle_sign_event(event):
-    global manoeuvre
-    global panneau
 def handle_manoeuvre3b2(event) :  
     path_dict = event.val
     global state  
@@ -382,10 +386,30 @@ def handle_manoeuvre3b2(event) :
     event 
     time.sleep(200)
     pass
-def emergency_stop(event)
+def emergency_stop(event) :
     global state
     global manoeuvre
     Car.send(0, 0, 0, 0)
     state = STOPPED
     event.val = 0
-    manoeuvre = {'pathdetector' : False, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False} 
+    manoeuvre = {'pathdetector' : False, 'manoeuvre3a.1' : False, 'manoeuvre3a.2' : False, 'manoeuvre3b.1' : False, 'manoeuvre3b.2' : False, 'manoeuvre3b.3' : False, 'manoeuvre3b.4' : False, 'manoeuvre3b.5' : False,'manoeuvre3b.7' : False, 'manoeuvre4.1' : False, 'manoeuvre4.2' : False, 'manoeuvre4.3' : False, 'manoeuvre4.4' : False, 'sign' : False} 
+
+def signrepertorie(panneau) :
+    logging.info("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")        
+    global st
+    global dr
+    global ga
+    if panneau == "Stop" and st == 0:
+        st = time.time()
+        logging.info(time.time()-st)
+    elif panneau == "right" and dr == 0:
+        dr = time()
+    elif panneau == "left" and ga == 0:
+        ga = time()
+    if time.time()-st > 8 :
+        st = 0
+    elif time.time()-dr > 5 :
+        dr = 0
+    elif time.time()-ga > 5 :
+        ga = 0
+    pass
