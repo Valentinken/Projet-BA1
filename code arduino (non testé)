@@ -38,6 +38,7 @@ void loop() {
   Serial.println(devant); //print la valeur
   if (devant==HIGH){ // on ne detect rien  && gauche==HIGH && droite == HIGH
   if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
+  if 
     // On lit les 4 valeurs contenues dans le message
     x = comm.xRead();
     y = comm.yRead();
