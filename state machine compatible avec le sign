@@ -75,7 +75,7 @@ def loop():
             state = MOVING
             Car.send(0, 0, 5, 0)
             event
-            time.sleep(5)
+            time.sleep(3)
             event
             Car.send(0, 0, 0, 0)
             state = STOPPED
@@ -86,7 +86,7 @@ def loop():
             state = MOVING		
             Car.send(0, 0, 3, 0)
             event
-            time.sleep(5)
+            time.sleep(4)
             event
             Car.send(0, 0, 0, 0)
             state = STOPPED
@@ -342,37 +342,26 @@ def handle_path_event(event):
         actuate_heading(event,heading) # enclanche la fonction corrigent la trajectoire de la voiture
     else : # on n'est pas en mouvement
         return
-def signdisable(numero) :
-    global manoeuvre
-    global panneau
-    manoeuvre['sign'] = False
-    manoeuvre[numero] = False
-    panneau = False
-    Car.send(0, 0 ,2 ,0)    
-    time.sleep(4)
-    manoeuvre['sign'] = True
-    manoeuvre[numero] = True
-    pass
 def actuate_heading(event,heading): # Fonction encore en phase de test
     if heading > 9000 : # fait tourné la voiture fortement à gauche
         state = MOVING
         heading = 2.5
-        Car.send(0, 0,2, heading)   
+        Car.send(1, 0,2, heading)   
         event
     elif heading < -9000 : # fait tourné la voiture fortement à droite
         state = MOVING
         heading = -2.5
-        Car.send(0, 0,2, heading)   
+        Car.send(1, 0,2, heading)   
         event     
     elif heading < -0.5 : # fait tourné la voiture à droite
         state = MOVING
         heading = -0.5
-        Car.send(0, 0,2, heading)   
+        Car.send(1, 0,2, heading)   
         event
     elif heading > 0.5 : # fait tourné la voiture à gauche
         state = MOVING
         heading = 0.5
-        Car.send(0, 0, 2, heading)
+        Car.send(1, 0, 2, heading)
         event
     pass   
 def handle_manoeuvre3b2(event) :  
