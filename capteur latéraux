@@ -83,19 +83,13 @@ void loop() {
        comm.sendMessage(x, y, u, v); // et on les renvoie à l'Orange PI
     }
      else if (gauche == LOW){//on detect un obstacle
-        motorA.actuate(0.6);
-        motorB.actuate(0.5);
-        delay(2000);
-        motorA.actuate(-0.5);
+        motorA.actuate(-0.3);
         motorB.actuate(-0.6);
         delay(1000);
     }
     else if (droite == LOW){//on detect un obstacle
-        motorA.actuate(0.5);
-        motorB.actuate(0.6);
-        delay(2000);
         motorA.actuate(-0.6);
-        motorB.actuate(-0.5);
+        motorB.actuate(-0.3);
         delay(1000);
     }
 }
