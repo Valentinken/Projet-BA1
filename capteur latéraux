@@ -43,31 +43,31 @@ void loop() {
     y = comm.yRead();
     u = comm.uRead();
     v = comm.vRead();
-    if (not x) : {
+    if (not x) {
     if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
-        delay(1000)
+        delay(1000);
         }
     else if (v < 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
-        delay(1000)
+        delay(1000);
         }
     else {
         motorA.actuate(0.2*u*(pow((4/5),v)));
         motorB.actuate(0.01+0.2*u);
-        delay(1000)
+        delay(1000);
         }    
     }
-    else :{
+    else {
     if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
         }
     else if (v < 0) {
         motorA.actuate(0.2*u);
-        motorB.actuate(0.010.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
+        motorB.actuate(0.01+0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         }
     else {
         motorA.actuate(0.2*u*(pow((4/5),v)));
@@ -92,4 +92,4 @@ void loop() {
         motorB.actuate(0.3);
         delay(1000);
     }
-}
+  }
