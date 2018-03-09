@@ -4,9 +4,9 @@ BacarMotor motorA(9, 7, 8);
 BacarMotor motorB(10, 11, 12);
 BacarComm comm;
 bool ledState;
-int capteurprox = 0; // emplacement du capteur de proximité
-int capteurgauche = 4; // emplacement du capteur gouche
-int capteurdroite = 8; // emplacement du capteur droit
+int capteurprox = 4; // emplacement du capteur de proximité 2
+int capteurgauche = 6; // emplacement du capteur gouche 6
+int capteurdroite = 5; // emplacement du capteur droit 5
 int devant =0; // de base on ne détécte rien
 int gauche =0;
 int droite =0;
@@ -36,7 +36,7 @@ void loop() {
   gauche = digitalRead(capteurgauche); // lit la valeur
   droite = digitalRead(capteurdroite); // lit la valeur
   Serial.println(devant); //print la valeur
-  if (devant==HIGH && gauche==HIGH && droite == HIGH){ // on ne detect rien
+  if (devant==HIGH && gauche==LOW && droite == LOW){ // on ne detect rien
   if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
     // On lit les 4 valeurs contenues dans le message
     x = comm.xRead();
@@ -45,33 +45,33 @@ void loop() {
     v = comm.vRead();
     if (not x) : {
     if (v == 0) {
-        motorA.actuate(-0.2*u);
-        motorB.actuate(-0.01+0.2*u);
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.01+0.2*u);
         delay(1000)
         }
     else if (v < 0) {
-        motorA.actuate(-0.2*u);
-        motorB.actuate(-0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.01+0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         delay(1000)
         }
     else {
-        motorA.actuate(-0.2*u*(pow((4/5),v)));
-        motorB.actuate(-0.01+0.2*u);
+        motorA.actuate(0.2*u*(pow((4/5),v)));
+        motorB.actuate(0.01+0.2*u);
         delay(1000)
         }    
     }
     else :{
     if (v == 0) {
-        motorA.actuate(-0.2*u);
-        motorB.actuate(-0.01+0.2*u);
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.01+0.2*u);
         }
     else if (v < 0) {
-        motorA.actuate(-0.2*u);
-        motorB.actuate(-0.01-0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
+        motorA.actuate(0.2*u);
+        motorB.actuate(0.010.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
         }
     else {
-        motorA.actuate(-0.2*u*(pow((4/5),v)));
-        motorB.actuate(-0.01+0.2*u);
+        motorA.actuate(0.2*u*(pow((4/5),v)));
+        motorB.actuate(0.01+0.2*u);
         }
         }
         }
@@ -82,14 +82,14 @@ void loop() {
        bool x = true;
        comm.sendMessage(x, y, u, v); // et on les renvoie à l'Orange PI
     }
-     else if (gauche == LOW){//on detect un obstacle
-        motorA.actuate(-0.3);
-        motorB.actuate(-0.6);
+     else if (gauche == HIGH){//on detect un obstacle
+        motorA.actuate(0.3);
+        motorB.actuate(0.6);
         delay(1000);
     }
-    else if (droite == LOW){//on detect un obstacle
-        motorA.actuate(-0.6);
-        motorB.actuate(-0.3);
+    else if (droite == HIGH){//on detect un obstacle
+        motorA.actuate(0.6);
+        motorB.actuate(0.3);
         delay(1000);
     }
 }
