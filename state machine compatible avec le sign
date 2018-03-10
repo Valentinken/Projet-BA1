@@ -126,29 +126,13 @@ def loop():
         if event.type == Event.CMD and event.val == "2.3":
             logging.info("maneuvre 2.3")
             manoeuvre['pathdetector'] = False
-            state = MOVING
-            Car.send(0, 0, 3, 0)
-            time.sleep(1.1)
-            Car.send(0, 0, 0, 0)
-            state = STOPPED
-            Car.send(0, 0, 0, 90)
-            state = MOVING
-            Car.send(0, 0, 3, 0)
-            time.sleep(1.11)
-            Car.send(0, 0, 0, 0)
-            state = STOPPED
-            Car.send(0, 0, 0, 90)
-            state = MOVING
-            Car.send(0, 0, 3, 0)
-            time.sleep(1.12)
-            Car.send(0, 0, 0, 0)
-            state = STOPPED
-            Car.send(0, 0, 0, 90)
-            state = MOVING
-            Car.send(0, 0, 3, 0)
-            time.sleep(1.13)
-            Car.send(0, 0, 0, 0)
-            state = STOPPED
+            for i in range(4):
+               state = MOVING
+               Car.send(0, 0, 3, 0)
+               time.sleep(1.1+i*0.1)
+               Car.send(0, 0, 0, 0)
+               state = STOPPED
+               Car.send(0, 0, 0, 90)
             pass
         if event.type == Event.CMD and event.val == "3a.1":
             logging.info("maneuvre 3a.1")
