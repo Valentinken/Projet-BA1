@@ -47,17 +47,17 @@ void loop() {
     if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
-        delay(1000*y);
+        delay(1000);
         }
     else if (v < 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u*(pow((4/5),-v))); // Le moins évide que le moteur tourne dans l'autre sens
-        delay(1000*y);
+        delay(1000);
         }
     else {
         motorA.actuate(0.2*u*(pow((4/5),v)));
         motorB.actuate(0.01+0.2*u);
-        delay(1000*y);
+        delay(1000);
         }    
     }
     else {
@@ -83,13 +83,13 @@ void loop() {
        comm.sendMessage(x, y, u, v); // et on les renvoie à l'Orange PI
     }
      else if (gauche == HIGH){//on detect un obstacle
-        motorA.actuate(0.3);
-        motorB.actuate(0.6);
+        motorA.actuate(0);
+        motorB.actuate(0);
         delay(1000);
     }
     else if (droite == HIGH){//on detect un obstacle
-        motorA.actuate(0.6);
-        motorB.actuate(0.3);
+        motorA.actuate(0);
+        motorB.actuate(0);
         delay(1000);
     }
   }
