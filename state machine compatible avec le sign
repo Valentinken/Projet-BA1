@@ -132,7 +132,7 @@ def loop():
                time.sleep(1.1+i*0.1)
                Car.send(0, 0, 0, 0)
                state = STOPPED
-               Car.send(0, 0, 0, 90)
+               Car.send(0, 0, 3, 90)
             pass
         if event.type == Event.CMD and event.val == "3a.1":
             logging.info("maneuvre 3a.1")
