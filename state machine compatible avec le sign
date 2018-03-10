@@ -348,11 +348,11 @@ def actuate_heading(event,heading): # Fonction encore en phase de test
         Car.send(1, 0, 2, heading)
         event
     else : 
-    state = MOVING
-    heading = 0.5
-    Car.send(1, 0, 2, 0)
-    event        
-    pass   
+        state = MOVING
+        heading = 0.5
+        Car.send(1, 0, 2, 0)
+        event        
+        pass   
 def handle_manoeuvre3b2(event) :  
     path_dict = event.val
     global state  
