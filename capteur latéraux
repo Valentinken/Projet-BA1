@@ -10,21 +10,11 @@ int capteurdroite = 5; // emplacement du capteur droit 5
 int devant =0; // de base on ne détécte rien
 int gauche =0;
 int droite =0;
-
-void setup() {
+void setup() {  
   Serial.begin(9600);
   pinMode(capteurprox,INPUT);
   pinMode(capteurgauche,INPUT);
   pinMode(capteurdroite,INPUT);
-
-  // Configure la LED pour pouvoir l'utiliser dans loop()
-  pinMode(LED_BUILTIN, OUTPUT);
-  ledState = LOW;
-  // Initialise l'objet comm
-  comm.begin();
-  // Configure la LED pour pouvoir l'utiliser dans loop()
-  pinMode(LED_BUILTIN, OUTPUT);
-  // Initialise les objets moteurs
   motorA.begin();
   motorB.begin();
 }
@@ -35,15 +25,14 @@ void loop() {
   devant = digitalRead(capteurprox); // lit la valeur
   gauche = digitalRead(capteurgauche); // lit la valeur
   droite = digitalRead(capteurdroite); // lit la valeur
-  Serial.println(devant); //print la valeur
   if (devant==HIGH && gauche==LOW && droite == LOW){ // on ne detect rien
-  if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
+    if (comm.newMessage() == true) {   // Vérifie si un nouveau message de l'Orange PI a été reçu
     // On lit les 4 valeurs contenues dans le message
     x = comm.xRead();
     y = comm.yRead();
     u = comm.uRead();
     v = comm.vRead();
-    if (not x) {
+    if (not x){
     if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
@@ -59,7 +48,7 @@ void loop() {
         motorB.actuate(0.01+0.2*u);
         delay(1000);
         }    
-    }
+}
     else {
     if (v == 0) {
         motorA.actuate(0.2*u);
@@ -73,9 +62,8 @@ void loop() {
         motorA.actuate(0.2*u*(pow((4/5),v)));
         motorB.actuate(0.01+0.2*u);
         }
-        }
-        }
-  }
+}
+}
      else if (devant == LOW){ //on detect un obstacle
         motorA.actuate(0);
         motorB.actuate(0);
@@ -92,4 +80,5 @@ void loop() {
         motorB.actuate(0);
         delay(1000);
     }
-  }
+}
+}
