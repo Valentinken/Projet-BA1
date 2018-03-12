@@ -15,6 +15,7 @@ void setup() {
   pinMode(capteurprox,INPUT);
   pinMode(capteurgauche,INPUT);
   pinMode(capteurdroite,INPUT);
+  comm.begin();
   motorA.begin();
   motorB.begin();
 }
