@@ -198,7 +198,7 @@ def loop():
             logging.info("maneuvre 3b.7")
             state = MOVING
             manoeuvre['manoeuvre3b.7'] = True
-            Car.send(0, 0, 2, 0)
+            Car.send(1, 0, 2, 0)
             event
             pass
         if event.type == Event.CMD and event.val == "4.1":
@@ -361,7 +361,7 @@ def actuate_heading(event,heading): # Fonction encore en phase de test
     elif heading > 0.5 : # fait tourné la voiture à gauche
         state = MOVING
         heading = 0.5
-        Car.send(0, 0, 2, heading)
+        Car.send(1, 0, 2, heading)
         event
     pass   
 def handle_manoeuvre3b2(event) :  
