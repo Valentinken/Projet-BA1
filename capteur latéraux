@@ -54,19 +54,14 @@ void loop() {
     if (v == 0) {
         motorA.actuate(0.2*u);
         motorB.actuate(0.01+0.2*u);
-        delay(500);
-
         }
     else if (v < 0) {
         motorA.actuate(0.2*u); //Le moins évide que la tension soit supérieur a 1
-        delay(500);
         motorB.actuate(0.01+0.2*u*(pow((4/5),-v))); // 
        }
     else {
         motorA.actuate(0.2*u*(pow((4/5),v)));
         motorB.actuate(0.01+0.2*u);
-        delay(500);
-
         }
 }
 }
